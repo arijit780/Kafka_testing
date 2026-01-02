@@ -1,18 +1,18 @@
-"""Simple Kafka consumer using kafka-python
+"""Kafka consumer demo: consumer groups and partition info
 """
 import json
 from kafka import KafkaConsumer
 
 consumer = KafkaConsumer(
     'test-topic',
-    bootstrap_servers='localhost:9092',
+    bootstrap_servers=['localhost:9092', 'localhost:9093', 'localhost:9094'],
     auto_offset_reset='earliest',
+    group_id='demo-group',
     value_deserializer=lambda m: json.loads(m.decode('utf-8')),
-    enable_auto_commit=True,
-    consumer_timeout_ms=10000
 )
 
 if __name__ == '__main__':
-    print("Listening for messages on 'test-topic' (will timeout after a short period)...")
+    print("Consumer group: demo-group — listening for messages on 'test-topic'...\n")
     for msg in consumer:
-        print("Received:", msg.value)
+        key = msg.key.decode('utf-8') if msg.key else None
+        print(f"Received: partition={msg.partition} offset={msg.offset} key={key} value={msg.value}")

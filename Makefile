@@ -1,7 +1,7 @@
 PYTHON=python3
 VENV=.venv
 
-.PHONY: up down logs venv install run-producer run-consumer
+.PHONY: up down logs venv install run-producer run-consumer create-topic list-topics delete-topic
 
 up:
 	@docker-compose up -d
@@ -10,7 +10,7 @@ down:
 	@docker-compose down
 
 logs:
-	@docker-compose logs -f kafka
+	@docker-compose logs -f kafka1 kafka2 kafka3
 
 venv:
 	@$(PYTHON) -m venv $(VENV)
@@ -24,3 +24,12 @@ run-producer:
 
 run-consumer:
 	@$(PYTHON) consumer.py
+
+create-topic:
+	@docker-compose exec -T kafka1 kafka-topics.sh --create --topic $(topic) --partitions $(parts) --replication-factor $(repl) --bootstrap-server kafka1:9092
+
+list-topics:
+	@docker-compose exec -T kafka1 kafka-topics.sh --list --bootstrap-server kafka1:9092
+
+delete-topic:
+	@docker-compose exec -T kafka1 kafka-topics.sh --delete --topic $(topic) --bootstrap-server kafka1:9092

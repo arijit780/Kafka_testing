@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   zookeeper:
     image: bitnami/zookeeper:3.8
@@ -7,15 +8,51 @@ services:
     ports:
       - "2181:2181"
 
-  kafka:
+  kafka1:
     image: bitnami/kafka:3.5
+    hostname: kafka1
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
     ports:
       - "9092:9092"
     depends_on:
       - zookeeper
+
+  kafka2:
+    image: bitnami/kafka:3.5
+    hostname: kafka2
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9093
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9093
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+    ports:
+      - "9093:9093"
+    depends_on:
+      - zookeeper
+
+  kafka3:
+    image: bitnami/kafka:3.5
+    hostname: kafka3
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9094
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9094
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+    ports:
+      - "9094:9094"
+    depends_on:
+      - zookeeper
+
+# Notes:
+# - Brokers advertise as localhost:9092/9093/9094 so you can connect from the host
+# - We disable auto-topic creation to show explicit topic management
