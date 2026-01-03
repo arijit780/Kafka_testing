@@ -33,3 +33,18 @@ list-topics:
 
 delete-topic:
 	@docker-compose exec -T kafka1 kafka-topics.sh --delete --topic $(topic) --bootstrap-server kafka1:9092
+
+up-advanced:
+	@docker-compose up -d schema-registry connect
+
+register-schemas:
+	@$(PYTHON) scripts/register_schemas.py
+
+start-connectors:
+	@curl -X POST -H "Content-Type: application/json" --data @connectors/file-sink.json http://localhost:8083/connectors || true
+
+run-avro-producer:
+	@$(PYTHON) avro_producer.py
+
+run-avro-consumer:
+	@$(PYTHON) avro_consumer.py

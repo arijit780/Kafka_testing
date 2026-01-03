@@ -96,3 +96,45 @@ make run-producer
 The producer sends messages with keys `key-0/key-1/key-2` which will deterministically be assigned to partitions; the consumer prints partition and offset so you can observe distribution and consumer group behavior.
 
 If you want monitoring or Schema Registry samples, tell me and I can add Prometheus/JMX exporter or Avro examples next. Enjoy learning Kafka! 🎯
+
+---
+
+## Schema Registry & Kafka Connect (Avro + Connectors) 🧩🔌
+This repository also includes an optional Schema Registry and Kafka Connect setup to demonstrate Avro serialization, schema evolution, and connector-based integration.
+
+Start the schema registry and connect worker:
+
+```bash
+make up-advanced
+```
+
+Register schemas (demonstrates compatibility checks):
+
+```bash
+make register-schemas
+```
+
+Run an Avro producer (registers v1 schema and sends messages):
+
+```bash
+make run-avro-producer
+```
+
+Run an Avro consumer:
+
+```bash
+make run-avro-consumer
+```
+
+Start the file-sink connector (writes consumed Avro values to `/tmp/kafka-connect-sink-output.txt`):
+
+```bash
+make start-connectors
+```
+
+Notes & requirements:
+- Avro examples use `confluent-kafka[avro]` and `fastavro`. On macOS you may need to `brew install librdkafka` before installing Python packages.
+- The `scripts/register_schemas.py` script demonstrates registering a v1 schema and then a compatible v2 schema (adds optional field `email`). It also sets compatibility to `BACKWARD` for the subject.
+- Connector example uses the built-in `FileStreamSink` to keep the demo simple; you can swap it for other connectors (JDBC/Elasticsearch) as needed.
+
+If you want, I can add Schema Registry UI tools, example connector configs for Elastic or JDBC, or a GitHub Actions job that runs integration tests. Which would you like next?
