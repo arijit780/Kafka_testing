@@ -1,0 +1,4 @@
+kafka-python>=2.0.0
+confluent-kafka[avro]>=2.1.0
+fastavro>=1.5.0
+requests>=2.0.0
